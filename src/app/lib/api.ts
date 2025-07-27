@@ -23,6 +23,7 @@ export const fakeApi = {
     },
 
     async logout(): Promise<FakeResponse> {
+        setCurrentUser(null);
         return {
             status: 200,
             data: '',

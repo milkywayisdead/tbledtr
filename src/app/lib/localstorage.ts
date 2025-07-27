@@ -30,7 +30,7 @@ export const getCurrentUser = (): User | null => {
     return null;
 }
 
-export const setCurrentUser = (user: User) => {
+export const setCurrentUser = (user: User | null) => {
     localStorage.setItem(currentUserKey, JSON.stringify(user));
 }
 
