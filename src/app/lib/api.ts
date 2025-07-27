@@ -1,17 +1,28 @@
 import { Doc, FakeResponse, NewDoc, NewUser, User } from "./interfaces";
-import { checkIfUserExists, getDoc, getDocsList, getUser, getUserDocsList, getUsersList, setDocsList, setUsersList } from "./localstorage";
+import { checkIfUserExists, getDoc, getDocsList, getUser, getUserDocsList, getUsersList, setCurrentUser, setDocsList, setUsersList } from "./localstorage";
 
 export const fakeApi = {
-    async login(user: User): Promise<FakeResponse> {
-        const { name, password } = user;
+    async login(name: string, password: string): Promise<FakeResponse> {
         const users = getUsersList();
+        const u = users.find(user => user.name === name && user.password === password);
+        if(!u){
+            return {
+                status: 400,
+                data: {}
+            }
+        }
+
+        setCurrentUser(u);
         return {
             status: 200,
-            data: '',
+            data: {
+                name: name,
+                id: u.id,
+            },
         }
     },
 
-    async logout(user: User): Promise<FakeResponse> {
+    async logout(): Promise<FakeResponse> {
         return {
             status: 200,
             data: '',
@@ -21,7 +32,10 @@ export const fakeApi = {
     async createUser(newUser: NewUser): Promise<FakeResponse> {
         const usersList = getUsersList();
         if(checkIfUserExists(newUser.name)){
-            throw Error('Пользователь существует');
+            return {
+                status: 409,
+                data: 'exists'
+            }
         }
 
         let newUserId = 1;

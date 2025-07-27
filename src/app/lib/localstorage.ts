@@ -2,6 +2,8 @@ import { Doc, NewDoc, User } from "./interfaces";
 
 const usersListKey = 'usersList';
 const docsListKey = 'docsList';
+const currentUserKey = 'currentUser';
+
 
 const createUsersList = () => {
     localStorage.setItem(usersListKey, JSON.stringify([]));
@@ -18,6 +20,18 @@ export const getUsersList = (): User[] => {
 
 export const getUser = (userId: number): User | undefined => {
     return getUsersList().find(user => user.id === userId);
+}
+
+export const getCurrentUser = (): User | null => {
+    const user = localStorage.getItem(currentUserKey);
+    if(user){
+        return JSON.parse(user);
+    }
+    return null;
+}
+
+export const setCurrentUser = (user: User) => {
+    localStorage.setItem(currentUserKey, JSON.stringify(user));
 }
 
 export const setUsersList = (usersList: User[]) => {
